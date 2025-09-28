@@ -6,7 +6,7 @@ from smbus2 import SMBus
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from ST7789 import ST7789
+import pyST7789
 
 class displayIO:
     # default values for the ST7789 display - FIXED
