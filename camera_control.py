@@ -1,5 +1,7 @@
-import RPi.GPIO as GPIO #type: ignore
+# import RPi.GPIO as GPIO #type: ignore
 import time
+import gpiod
+from gpiod.line import Edge
 
 from smbus2 import SMBus
 
@@ -41,23 +43,26 @@ class thermalcam:
     display = None
     dispImage = None
     drawImage = None
+    chip = None
 
     def __init__(self):
         self.setup_gpio() # setup gpio
     
     def setup_gpio(self):
-        # setup GPIO buttons
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(displayIO.BUTTON_BL, GPIO.IN)
-        GPIO.setup(displayIO.BUTTON_BR, GPIO.IN)
-        GPIO.setup(displayIO.BUTTON_TL, GPIO.IN)
-        GPIO.setup(displayIO.BUTTON_TR, GPIO.IN)
+        self.chip = gpiod.Chip('gpiochip0')
+        
+        # # setup GPIO buttons
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setup(displayIO.BUTTON_BL, GPIO.IN)
+        # GPIO.setup(displayIO.BUTTON_BR, GPIO.IN)
+        # GPIO.setup(displayIO.BUTTON_TL, GPIO.IN)
+        # GPIO.setup(displayIO.BUTTON_TR, GPIO.IN)
 
-        # GPIO handler
-        GPIO.add_event_detect(displayIO.BUTTON_BL, GPIO.RISING, callback=self.btn_bl_press, bouncetime=250)
-        GPIO.add_event_detect(displayIO.BUTTON_BR, GPIO.RISING, callback=self.btn_br_press, bouncetime=250)
-        GPIO.add_event_detect(displayIO.BUTTON_TL, GPIO.RISING, callback=self.btn_tl_press, bouncetime=250)
-        GPIO.add_event_detect(displayIO.BUTTON_TR, GPIO.RISING, callback=self.btn_tr_press, bouncetime=250)
+        # # GPIO handler
+        # GPIO.add_event_detect(displayIO.BUTTON_BL, GPIO.RISING, callback=self.btn_bl_press, bouncetime=250)
+        # GPIO.add_event_detect(displayIO.BUTTON_BR, GPIO.RISING, callback=self.btn_br_press, bouncetime=250)
+        # GPIO.add_event_detect(displayIO.BUTTON_TL, GPIO.RISING, callback=self.btn_tl_press, bouncetime=250)
+        # GPIO.add_event_detect(displayIO.BUTTON_TR, GPIO.RISING, callback=self.btn_tr_press, bouncetime=250)
 
         self.display = ST7789(port=self.displayIO.SPI_PORT,
                               cs=self.displayIO.SPI_CS,
@@ -70,7 +75,8 @@ class thermalcam:
         
         # run default menu
         self.startup_display()
-        self.default_mode()
+        # self.default_mode()
+        self.watch_button_press()
     
     def startup_display(self):
         # run a little animation to show the device is thinking. takes a few seconds before everything is ready
@@ -97,6 +103,17 @@ class thermalcam:
             self.drawImage.rectangle((i, rect[1] + 1, i + pxShift - 1, rect[3] - 1), fill=(0, 255, 0))
             self.display.display(self.dispImage)
             time.sleep(0.250)
+
+    def watch_button_press():
+        buttonTup = [displayIO.BUTTON_TL, displayIO.BUTTON_BL, displayIO.BUTTON_TR, displayIO.BUTTON_BR]
+        with gpiod.request_lines(self.chip,
+                                 consumer="watch-button-press",
+                                 config={tuple(buttonTup): gpiod.LineSettings(edge_detection=Edge.RISING_EDGE)},
+                                 ) as request:
+            while True:
+                for event in request.read_edge_events():
+                    print(event.line_offset)
+                    
 
     def default_mode(self):
         while True:
