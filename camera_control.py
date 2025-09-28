@@ -84,14 +84,14 @@ class thermalcam:
         msgScreen = "Thermal Camera Starting..."
 
         # draw black background with centered text
-        self.dispImage = Image.new('RGB', (self.WIDTH, self.HEIGHT), color=(0, 0, 0))
+        self.dispImage = Image.new('RGB', (displayIO.WIDTH, displayIO.HEIGHT), color=(0, 0, 0))
         self.drawImage = ImageDraw.Draw(self.dispImage)
-        self.drawImage.text(((self.WIDTH / 2), (self.HEIGHT / 3) - (displayFont.largeSize / 2)), msgScreen, font=displayFont.large, fill=(255, 255, 255), anchor='mm')
+        self.drawImage.text(((displayIO.WIDTH / 2), (displayIO.HEIGHT / 3) - (displayFont.largeSize / 2)), msgScreen, font=displayFont.large, fill=(255, 255, 255), anchor='mm')
 
         # draw a loading bar outline
         inset = 19
-        rectY0 = self.HEIGHT / 3 * 2
-        rect = (inset, rectY0, self.WIDTH - inset, rectY0 + 20)
+        rectY0 = displayIO.HEIGHT / 3 * 2
+        rect = (inset, rectY0, displayIO.WIDTH - inset, rectY0 + 20)
         self.drawImage.rectangle((rect[0], rect[1], rect[2], rect[3]), fill=(0, 0, 0), outline=(255, 255, 255))
 
         # fill it with green over a period of 10s
