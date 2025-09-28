@@ -104,7 +104,7 @@ class thermalcam:
             self.display.display(self.dispImage)
             time.sleep(0.250)
 
-    def watch_button_press():
+    def watch_button_press(self):
         buttonTup = [displayIO.BUTTON_TL, displayIO.BUTTON_BL, displayIO.BUTTON_TR, displayIO.BUTTON_BR]
         with gpiod.request_lines("/dev/gpiochip0",
                                  consumer="watch-button-press",
