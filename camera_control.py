@@ -64,14 +64,14 @@ class thermalcam:
         # GPIO.add_event_detect(displayIO.BUTTON_TL, GPIO.RISING, callback=self.btn_tl_press, bouncetime=250)
         # GPIO.add_event_detect(displayIO.BUTTON_TR, GPIO.RISING, callback=self.btn_tr_press, bouncetime=250)
 
-        self.display = ST7789(port=self.displayIO.SPI_PORT,
-                              cs=self.displayIO.SPI_CS,
-                              dc=self.displayIO.SPI_DC,
-                              backlight=self.displayIO.BACKLIGHT,
-                              width=self.displayIO.WIDTH,
-                              height=self.displayIO.HEIGHT,
-                              rotation=self.displayIO.ROTATE,
-                              spi_speed_hz=self.displayIO.SPI_HZ)
+        self.display = ST7789(port=displayIO.SPI_PORT,
+                              cs=displayIO.SPI_CS,
+                              dc=displayIO.SPI_DC,
+                              backlight=displayIO.BACKLIGHT,
+                              width=displayIO.WIDTH,
+                              height=displayIO.HEIGHT,
+                              rotation=displayIO.ROTATE,
+                              spi_speed_hz=displayIO.SPI_HZ)
         
         # run default menu
         self.startup_display()
