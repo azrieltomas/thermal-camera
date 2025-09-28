@@ -49,7 +49,7 @@ class thermalcam:
         self.setup_gpio() # setup gpio
     
     def setup_gpio(self):
-        self.chip = gpiod.Chip('gpiochip0')
+        # self.chip = gpiod.Chip('gpiochip0')
         
         # # setup GPIO buttons
         # GPIO.setmode(GPIO.BCM)
@@ -106,7 +106,7 @@ class thermalcam:
 
     def watch_button_press():
         buttonTup = [displayIO.BUTTON_TL, displayIO.BUTTON_BL, displayIO.BUTTON_TR, displayIO.BUTTON_BR]
-        with gpiod.request_lines(self.chip,
+        with gpiod.request_lines("/dev/gpiochip0",
                                  consumer="watch-button-press",
                                  config={tuple(buttonTup): gpiod.LineSettings(edge_detection=Edge.RISING_EDGE)},
                                  ) as request:
